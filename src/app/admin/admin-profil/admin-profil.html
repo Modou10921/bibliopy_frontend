@@ -1,0 +1,42 @@
+<div class="profil-container">
+  
+  <div class="profil-header">
+    <div class="header-left">
+      <span class="back-arrow" (click)="retourAuDashboard()">←</span>
+      <h1 class="brand-title">Biblio PY</h1>
+    </div>
+    <button class="btn-logout" (click)="seDeconnecter()">Deconnexion</button>
+  </div>
+
+  <div class="profil-content">
+    <div class="avatar-wrapper">
+      <div class="large-avatar-fallback">👤</div>
+    </div>
+    
+    <h2 class="profile-title">Mon compte</h2>
+    <div class="admin-badge">Admin</div>
+
+    <div class="info-card">
+      <div class="info-group">
+        <span class="label">Prenom :</span>
+        <span class="value">{{ prenomAdmin }}</span>
+      </div>
+      
+      <div class="info-group">
+        <span class="label">Nom :</span>
+        <span class="value">{{ nomAdmin }}</span>
+      </div>
+      
+      <div class="info-group">
+        <span class="label">Email :</span>
+        <span class="value">{{ emailAdmin }}</span>
+      </div>
+      
+      <div class="info-group">
+        <span class="label">Mot de passe :</span>
+        <span class="value font-dots">{{ motDePasseMasque }}</span>
+      </div>
+    </div>
+
+  </div>
+</div>

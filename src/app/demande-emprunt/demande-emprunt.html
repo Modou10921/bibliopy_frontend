@@ -1,0 +1,59 @@
+<main class="demande-container" *ngIf="!loading && livre">
+  <div class="form-wrapper">
+
+    <div class="preview-side">
+      <img [src]="livre.image" [alt]="livre.titre" class="form-book-img" *ngIf="livre.image">
+      <div class="no-image" *ngIf="!livre.image">📖</div>
+    </div>
+
+    <div class="form-side">
+
+      <div class="msg-erreur" *ngIf="erreurEnvoi">❌ {{ erreurEnvoi }}</div>
+
+      <div class="input-group">
+        <label>Nom complet</label>
+        <input type="text" [(ngModel)]="etudiantConnecte.nom_complet"
+               class="form-control" [readonly]="isConnecte">
+      </div>
+
+      <div class="input-group">
+        <label>Date et Lieu de Naissance</label>
+        <input type="text" [(ngModel)]="naissance"
+               class="form-control" placeholder="Ex: 12/03/2004 à Dakar">
+      </div>
+
+      <div class="input-group">
+  <label>Email</label>
+  <input type="email" [(ngModel)]="etudiantConnecte.email"
+         class="form-control" [readonly]="isConnecte">
+</div>
+
+      <div class="input-group">
+        <label>Titre du livre</label>
+        <input type="text" [value]="livre.titre" readonly class="form-control readonly-input">
+      </div>
+
+      <div class="input-group">
+        <label>Catégorie</label>
+        <input type="text" [value]="livre.categorie" readonly class="form-control readonly-input">
+      </div>
+
+      <div class="input-group">
+        <label>Date d'emprunt</label>
+        <input type="date" [(ngModel)]="dateEmprunt" class="form-control">
+      </div>
+
+      <div class="input-group">
+        <label>Date de retour</label>
+        <input type="date" [(ngModel)]="dateRetour" class="form-control">
+      </div>
+
+      <div class="btn-container">
+        <button type="button" class="btn-envoyer" (click)="envoyerDemande()">
+          Envoyer la demande
+        </button>
+      </div>
+
+    </div>
+  </div>
+</main>

@@ -1,0 +1,40 @@
+<div class="page-container">
+
+  <div class="header">
+    <button class="btn-retour" (click)="retourDashboard()">← Retour</button>
+    <h1>👤 Étudiants Inscrits</h1>
+    <span class="total-badge">{{ etudiants.length }} étudiants</span>
+  </div>
+
+  <div *ngIf="estEnChargement" class="chargement">
+    Chargement...
+  </div>
+
+  <div *ngIf="!estEnChargement && etudiants.length === 0" class="vide">
+    Aucun étudiant inscrit.
+  </div>
+
+  <div class="table-wrapper" *ngIf="!estEnChargement && etudiants.length > 0">
+    <table class="table-etudiants">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Prénom</th>
+          <th>Nom</th>
+          <th>Email</th>
+          <th>N° Carte</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let e of etudiants; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>{{ e.prenom }}</td>
+          <td>{{ e.nom }}</td>
+          <td>{{ e.email }}</td>
+          <td class="carte-id">{{ e.numero_carte_etudiant }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>

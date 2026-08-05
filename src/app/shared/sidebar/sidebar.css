@@ -1,0 +1,73 @@
+.sidebar {
+  width: 200px;
+  min-height: 100vh;
+  background: #6B21A8;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+
+.brand-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+}
+
+.close-btn {
+  cursor: pointer;
+  font-size: 16px;
+  opacity: 0.7;
+}
+
+.sidebar-menu {
+  display: flex;
+  flex-direction: column;
+  padding: 12px 0;
+}
+
+.menu-item {
+  padding: 12px 16px;
+  font-size: 14px;
+  color: rgba(255,255,255,0.85);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.menu-item:hover, .menu-item.active {
+  background: rgba(255,255,255,0.15);
+  color: #fff;
+  font-weight: 600;
+}
+
+.deconnexion {
+  margin-top: auto;
+  color: #fca5a5;
+}
+
+.menu-notif {
+  display: flex !important;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.badge-danger {
+  background-color: #ff3b30; /* Rouge vif */
+  color: white;
+  font-size: 11px;
+  font-weight: bold;
+  padding: 2px 7px;
+  border-radius: 10px;
+  margin-left: 10px;
+}

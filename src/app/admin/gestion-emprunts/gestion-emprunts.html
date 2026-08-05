@@ -1,0 +1,53 @@
+<div class="page-container">
+
+  <div class="header">
+    <div class="header-left">
+      <button class="btn-back" (click)="retour()">&#8592;</button>
+      <span class="logo">BiblioPY</span>
+    </div>
+    <div class="header-right">
+      <span class="admin-label">Admin</span>
+      <div class="avatar">A</div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <div class="section-top">
+      <h2 class="page-title">Gérer les Emprunts</h2>
+      <div class="search-bar">
+        <span>🔍</span>
+        <input type="text" placeholder="Recherche un emprunt..." [(ngModel)]="recherche" (input)="filtrer()">
+      </div>
+    </div>
+
+    <div class="msg-erreur" *ngIf="erreur">❌ {{ erreur }}</div>
+    <div class="msg-succes" *ngIf="succes">✅ {{ succes }}</div>
+    <div class="loading" *ngIf="loading">Chargement des emprunts...</div>
+
+    <div class="emprunts-list" *ngIf="!loading">
+
+      <div class="emprunt-row" *ngFor="let e of empruntsFiltres">
+        <div class="emprunt-cover">
+          <img *ngIf="e.livre_details?.image" [src]="e.livre_details?.image" [alt]="e.livre_details?.titre">
+          <span *ngIf="!e.livre_details?.image">📖</span>
+        </div>
+        <div class="emprunt-meta">
+          <div class="em-titre">{{ e.livre_details?.titre }}</div>
+          <div class="em-detail">Genre : {{ e.livre_details?.categorie }}</div>
+          <div class="em-detail">Date demande : {{ e.date_demande | date:'dd/MM/yyyy' }}</div>
+          <div class="em-detail">Retour prévu : {{ e.date_retour_prevue | date:'dd/MM/yyyy' }}</div>
+        </div>
+        <div class="emprunt-actions">
+  <span class="badge" [ngClass]="getBadgeClass(e.statut)">{{ e.statut }}</span>
+  <button class="btn-notif" *ngIf="e.statut === 'accepte'" (click)="envoyerNotification(e)">
+    Envoyer une notif
+  </button>
+</div>
+      </div>
+
+      <div class="empty" *ngIf="empruntsFiltres.length === 0">Aucun emprunt trouvé.</div>
+    </div>
+
+  </div>
+</div>

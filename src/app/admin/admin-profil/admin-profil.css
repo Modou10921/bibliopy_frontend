@@ -1,0 +1,122 @@
+.profil-container {
+  font-family: 'Segoe UI', Roboto, sans-serif;
+  background-color: #f8fafc;
+  min-height: 100vh;
+  padding: 20px 30px;
+}
+
+.profil-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.back-arrow {
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #334155;
+  font-weight: bold;
+}
+
+.brand-title {
+  font-size: 1.4rem;
+  color: #000000;
+  font-weight: bold;
+}
+
+.btn-logout {
+  background-color: #c22805;
+  color: white;
+  border: none;
+  padding: 10px 22px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.profil-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+}
+
+/* Fallback si pas de photo chargée */
+.avatar-wrapper {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background-color: #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.large-avatar-fallback {
+  font-size: 4rem;
+}
+
+.profile-title {
+  font-size: 1.8rem;
+  color: #000000;
+  font-weight: bold;
+  margin: 5px 0;
+}
+
+.admin-badge {
+  background-color: #e2e8f0;
+  padding: 4px 14px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-bottom: 25px;
+  border: 1px solid #cbd5e1;
+}
+
+.info-card {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 30px;
+  width: 100%;
+  max-width: 450px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.info-group {
+  display: flex;
+  margin-bottom: 20px;
+  font-size: 1.05rem;
+}
+
+.info-group:last-child {
+  margin-bottom: 0;
+}
+
+.label {
+  color: #64748b;
+  width: 120px;
+  font-weight: 500;
+}
+
+.value {
+  color: #1e293b;
+  font-weight: 600;
+}
+
+.status-highlight {
+  color: #0284c7; /* Couleur bleue pour mettre en valeur les statistiques */
+}
+
+.font-dots {
+  letter-spacing: 3px;
+}

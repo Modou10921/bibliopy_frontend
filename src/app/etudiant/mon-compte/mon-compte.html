@@ -1,0 +1,62 @@
+<div class="dashboard-container">
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <h2 class="brand-title" routerLink="/">Biblio PY</h2>
+      <span class="close-sidebar-icon" routerLink="/">×</span>
+    </div>
+    <nav class="sidebar-menu">
+      <a routerLink="/etudiant/mon-compte" class="menu-item active">Mon compte</a>
+      <a routerLink="/etudiant/suivi-emprunts" class="menu-item">Suivi des Emprunts</a>
+      <a routerLink="/etudiant/historique" class="menu-item">Historique des emprunts</a>
+      <a routerLink="/mes-emprunts" class="menu-item">Mes livres</a>
+      <a routerLink="/etudiant/notifications" class="menu-item">Notifications <span class="badge">0</span></a>
+      <a (click)="deconnecter()" class="menu-item logout-link" style="cursor: pointer;">Deconnexion</a>
+    </nav>
+  </aside>
+
+  <main class="main-content">
+    
+    <div class="navigation-container">
+      <button routerLink="/" class="circle-back-btn" title="Retour à l'accueil">
+        <span class="arrow-icon">←</span>
+      </button>
+    </div>
+
+    <section class="profile-center-wrapper">
+      
+      <div class="profile-header-flex">
+        <div class="avatar-block">
+          <div class="avatar-circle">
+            <img src="assets/images/avatar-placeholder.png" alt="Avatar" class="avatar-img" *ngIf="false">
+            <span class="default-avatar-icon">👤</span>
+          </div>
+          <h2 class="profile-main-title">Mon compte</h2>
+        </div>
+
+        <button routerLink="/etudiant/profil" class="btn-profil-violet">
+          Profil Étudiant →
+        </button>
+      </div>
+
+      <div class="info-card-container" *ngIf="profil">
+        <div class="info-row">
+          <span class="field-label">Prenom :</span>
+          <span class="field-value">{{ profil.prenom || profil.user?.first_name }}</span>
+        </div>
+        <div class="info-row">
+          <span class="field-label">Nom :</span>
+          <span class="field-value">{{ profil.nom || profil.user?.last_name }}</span>
+        </div>
+        <div class="info-row">
+          <span class="field-label">Email :</span>
+          <span class="field-value">{{ profil.email || profil.user?.email }}</span>
+        </div>
+        <div class="info-row">
+          <span class="field-label">Identifiant :</span>
+          <span class="field-value highlight-id">{{ profil.numero_carte_etudiant || profil.id }}</span>
+        </div>
+      </div>
+
+    </section>
+  </main>
+</div>
