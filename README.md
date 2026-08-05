@@ -1,59 +1,38 @@
-# BibliopyFrontend
+# 📚 BiblioPy — Frontend (Interface Utilisateur)
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.11.
+BiblioPy est une application web full-stack de gestion de bibliothèque. Ce dépôt contient l'interface utilisateur développée avec **Angular**.
 
-## Development server
+---
 
-To start a local development server, run:
+## 🛠️ Stack Technique Frontend
+
+- **Framework :** Angular
+- **Langage :** TypeScript, HTML5, SCSS
+- **Design & UI :** Angular Material / CSS personnalisé
+- **Communication avec l'API :** HttpClient (RxJS)
+
+---
+
+## ✨ Fonctionnalités Principales
+
+- **Dashboard Administrateur :** Vue d'ensemble des statistiques (livres disponibles, emprunts en cours, utilisateurs inscrits).
+- **Gestion Visuelle des Livres :** Interface pour ajouter, éditer et supprimer des ouvrages.
+- **Suivi des Étudiants et Emprunts :** Tableaux interactifs pour gérer les validations, les retours et les retards.
+- **Espace Étudiant :** Interface dédiée pour la consultation du catalogue et les demandes d'emprunt.
+
+---
+
+## 💻 Installation & Lancement en Local
+
+Pour lancer ce projet sur votre machine, assurez-vous d'avoir **Node.js** et **Angular CLI** installés.
 
 ```bash
+# 1. Cloner le dépôt
+git clone [https://github.com/Modou10921/bibliopy_frontend.git](https://github.com/Modou10921/bibliopy_frontend.git)
+cd bibliopy_frontend
+
+# 2. Installer les dépendances
+npm install
+
+# 3. Lancer l'application en mode développement
 ng serve
-```
-
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
