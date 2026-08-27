@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { AuthService } from '../connexion/auth.service';
+import { AuthService } from '../connexion/connexion';
 
 @Component({
   selector: 'app-inscription',
