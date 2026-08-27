@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { AuthService } from '../services/auth.service'; // Adjust path if needed
+import { AuthService } from '../../services/auth.service'; // Ajustez le chemin vers auth.service si nécessaire
 
 @Component({
   selector: 'app-inscription',
@@ -12,7 +12,7 @@ import { AuthService } from '../services/auth.service'; // Adjust path if needed
   styleUrls: ['./inscription.css']
 })
 export class InscriptionComponent implements OnInit {
-  
+
   isAdmin: boolean = false;
   showPassword: boolean = false;
 
@@ -25,19 +25,22 @@ export class InscriptionComponent implements OnInit {
     ine: ''
   };
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     if (this.router.url.includes('admin')) {
       this.isAdmin = true;
     }
   }
 
-  togglePassword() {
+  togglePassword(): void {
     this.showPassword = !this.showPassword;
   }
 
-  onRegister() {
+  onRegister(): void {
     const backendData = {
       username: this.userData.email,
       email: this.userData.email,
@@ -51,30 +54,28 @@ export class InscriptionComponent implements OnInit {
 
     console.log("Données envoyées au backend Django :", backendData);
 
-    // Utilisation de AuthService au lieu de l'URL localhost en dur
-    this.authService.inscrire(backendData)
-      .subscribe({
-        next: (reponse) => {
-          console.log("Inscription réussie !", reponse);
-          alert("Votre compte a bien été créé !");
-          
-          if (this.isAdmin) {
-            this.router.navigate(['/admin/creer-bibliotheque']);
-          } else {
-            this.router.navigate(['/connexion']);
-          }
-        },
-        error: (erreur) => {
-          console.error("Erreur renvoyée par Django :", erreur);
-          
-          if (erreur.status === 0) {
-            alert("Impossible de joindre le serveur Django. Vérifie que ton backend est lancé et que le CORS est activé !");
-          } else if (erreur.error && erreur.error.error) {
-            alert("Erreur du serveur : " + erreur.error.error);
-          } else {
-            alert("Une erreur est survenue lors de l'inscription. Vérifie les logs de la console.");
-          }
+    this.authService.inscrire(backendData).subscribe({
+      next: (reponse: any) => {
+        console.log("Inscription réussie !", reponse);
+        alert("Votre compte a bien été créé !");
+
+        if (this.isAdmin) {
+          this.router.navigate(['/admin/creer-bibliotheque']);
+        } else {
+          this.router.navigate(['/connexion']);
         }
-      });
+      },
+      error: (erreur: any) => {
+        console.error("Erreur renvoyée par Django :", erreur);
+
+        if (erreur.status === 0) {
+          alert("Impossible de joindre le serveur Django. Vérifie que ton backend est lancé et que le CORS est activé !");
+        } else if (erreur.error && erreur.error.error) {
+          alert("Erreur du serveur : " + erreur.error.error);
+        } else {
+          alert("Une erreur est survenue lors de l'inscription. Vérifie les logs de la console.");
+        }
+      }
+    });
   }
 }
