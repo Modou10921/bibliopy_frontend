@@ -4,7 +4,8 @@ import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private apiUrl = environment.apiUrl;
+  // On s'assure de retirer un éventuel slash final dans apiUrl pour éviter les doubles slashes "//"
+  private apiUrl = environment.apiUrl.replace(/\/$/, '');
 
   constructor(private http: HttpClient) {}
 
@@ -12,16 +13,16 @@ export class AuthService {
     return this.http.post<any>(`${this.apiUrl}/login/`, {
       email: email,
       password: password,
-      isEtudiant: !isAdmin // 🟢 Si c'est un admin, isEtudiant sera 'false', exactement ce qu'attend Django !
+      isEtudiant: !isAdmin
     });
   }
 
   inscrire(data: any) {
-    return this.http.post(`${this.apiUrl}/register/`, data);
+    // 🔴 Correction de l'endpoint : /inscription/ au lieu de /register/
+    return this.http.post(`${this.apiUrl}/inscription/`, data);
   }
 
   sauvegarderSession(token: string, user: any) {
-    // 🛠️ CORRECTION : Harmonisation des noms de clé avec isLoggedIn() et getToken()
     localStorage.setItem('access_token', token);
     localStorage.setItem('user', JSON.stringify(user)); 
   }
