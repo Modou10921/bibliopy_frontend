@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
 import { CommonModule, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from '../services/auth.service'; // Adjust path if needed
 
 @Component({
   selector: 'app-inscription',
@@ -14,7 +14,7 @@ import { FormsModule } from '@angular/forms';
 export class InscriptionComponent implements OnInit {
   
   isAdmin: boolean = false;
-  showPassword: boolean = false; // Suit l'état visible/masqué du mot de passe
+  showPassword: boolean = false;
 
   userData = {
     prenom: '',
@@ -25,7 +25,7 @@ export class InscriptionComponent implements OnInit {
     ine: ''
   };
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit() {
     if (this.router.url.includes('admin')) {
@@ -51,7 +51,8 @@ export class InscriptionComponent implements OnInit {
 
     console.log("Données envoyées au backend Django :", backendData);
 
-    this.http.post<any>('http://localhost:8000/api/inscription/', backendData)
+    // Utilisation de AuthService au lieu de l'URL localhost en dur
+    this.authService.inscrire(backendData)
       .subscribe({
         next: (reponse) => {
           console.log("Inscription réussie !", reponse);
@@ -71,7 +72,7 @@ export class InscriptionComponent implements OnInit {
           } else if (erreur.error && erreur.error.error) {
             alert("Erreur du serveur : " + erreur.error.error);
           } else {
-            alert("Une erreur est survenue lors de l'inscription. Vérifie les logs de la console Django.");
+            alert("Une erreur est survenue lors de l'inscription. Vérifie les logs de la console.");
           }
         }
       });
