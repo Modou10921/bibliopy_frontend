@@ -67,7 +67,7 @@ export class DemandeEmpruntComponent implements OnInit {
     // Charger le livre
     const idLivre = this.route.snapshot.paramMap.get('id');
     if (idLivre) {
-      this.http.get<any>(`http://localhost:8000/api/livres/${idLivre}/`).subscribe({
+      this.http.get<any>(`https://bibliopy-backend.onrender.com/api/livres/${idLivre}/`).subscribe({
         next: (data) => {
           this.livre = data;
           this.loading = false;
