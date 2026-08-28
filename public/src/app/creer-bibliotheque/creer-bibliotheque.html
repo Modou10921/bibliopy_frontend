@@ -1,0 +1,70 @@
+<div class="main-wrapper">
+  
+  <div class="logo-container">
+    <div class="circular-logo">
+      <div class="inner-circle">
+        <span class="book-icon">📖</span>
+        <div class="logo-text-top">BIBLIOTHEQUE</div>
+        <div class="logo-text-bottom">BIBLIOTHEQUE</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-container">
+    <h1 class="title">Créer votre Bibliotheque</h1>
+    <p class="subtitle">Veuillez remplir les infos relatifs a ce formulaire</p>
+
+    <form (ngSubmit)="onSubmit()" class="library-form">
+      
+      <div class="input-group">
+        <label>Nom de l'universite</label>
+        <input type="text" [(ngModel)]="libData.nom_universite" name="nom_universite" required>
+      </div>
+
+      <div class="input-group">
+        <label>Ville/Pays</label>
+        <input type="text" [(ngModel)]="libData.ville_pays" name="ville_pays" required>
+      </div>
+
+      <div class="input-group">
+        <label>Adresse</label>
+        <input type="text" [(ngModel)]="libData.adresse" name="adresse" required>
+      </div>
+
+      <div class="input-group">
+        <label>Telephone</label>
+        <input type="tel" [(ngModel)]="libData.telephone" name="telephone" required>
+      </div>
+
+      <div class="input-group">
+        <label>Email de la bibliotheque</label>
+        <div class="input-with-icon">
+          <input type="email" [(ngModel)]="libData.email" name="email" required>
+          <span class="icon-mail">✉️</span>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label>Logo</label>
+        <div class="input-file-container" (click)="fileInput.click()" style="cursor: pointer;">
+          <input 
+            type="text" 
+            [value]="selectedFileName ? selectedFileName : 'Sélectionner le logo...'" 
+            class="logo-placeholder-input" 
+            readonly>
+          <span class="icon-upload">📁</span>
+        </div>
+        
+        <input 
+          type="file" 
+          #fileInput 
+          (change)="onFileSelected($event)" 
+          accept="image/*" 
+          style="display: none;">
+      </div>
+
+      <button type="submit" class="btn-submit">CREER LA BIBLIOTHEQUE</button>
+
+    </form>
+  </div>
+</div>

@@ -1,0 +1,25 @@
+/* Structure de base identique à tes autres pages */
+.dashboard-container { display: flex; min-height: 100vh; font-family: sans-serif; }
+.sidebar { width: 240px; background: #3d0099; color: white; padding: 20px; }
+.brand-title { font-size: 24px; margin-bottom: 30px; }
+.sidebar-menu { display: flex; flex-direction: column; gap: 15px; }
+.menu-item { color: #ccb3ff; text-decoration: none; padding: 10px; border-radius: 5px; }
+.menu-item.active, .menu-item:hover { background: #5200cc; color: white; }
+.main-content { flex: 1; background: #fafafa; padding: 20px; }
+.top-header { display: flex; justify-content: flex-end; margin-bottom: 20px; }
+.user-profile { display: flex; align-items: center; gap: 10px; }
+.user-avatar { width: 35px; height: 35px; background: #e0e0e0; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+.page-title { font-size: 26px; color: #222; margin-bottom: 30px; }
+
+/* Style du Tableau de l'historique */
+.table-container { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+.historique-table { width: 100%; border-collapse: collapse; text-align: left; }
+.historique-table th { padding: 12px 15px; color: #666; font-weight: 600; border-bottom: 2px solid #eee; font-size: 14px; }
+.historique-table td { padding: 15px; border-bottom: 1px solid #eee; vertical-align: middle; color: #333; font-size: 14px; }
+
+/* Image miniature du livre dans le tableau */
+.table-book-cover { width: 45px; height: 65px; object-fit: cover; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+.book-title-cell { font-weight: 600; color: #111; }
+
+/* 🟢 LE BADGE VERT "RENDU" */
+.badge-rendu { background-color: #d4edda; color: #155724; padding: 6px 12px; border-radius: 20px; font-weight: bold; font-size: 13px; display: inline-block; }

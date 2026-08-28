@@ -1,0 +1,73 @@
+<header class="navbar">
+  <div class="logo-area">
+    <h1 class="brand-title" (click)="filtrerParCategorie(null); filtrerParFiliere(null)" style="cursor: pointer;">BIBLIO PY</h1>
+    <div class="search-wrapper">
+      <i class="fas fa-search search-icon"></i>
+      <input 
+        type="text" 
+        placeholder="Recherche votre livre" 
+        class="search-input" 
+        [(ngModel)]="termeRecherche"
+        (input)="surRechercheChangement()"
+      >
+    </div>
+  </div>
+
+  <nav class="nav-links">
+    <a (click)="filtrerParCategorie(null); filtrerParFiliere(null)" class="nav-link" [class.active]="!categorieSelectionnee && !filiereSelectionnee">Accueil</a>
+    <span class="separator">/</span>
+    
+    <div class="dropdown">
+      <a class="nav-link" (click)="$event.stopPropagation(); toggleMenuCategorie()" [class.active]="categorieSelectionnee">
+        {{ categorieSelectionnee || 'Categories' }} <span class="arrow">▾</span>
+      </a>
+      <ul class="dropdown-menu" [style.display]="menuCategorieOuvert ? 'block' : 'none'">
+        <li (click)="$event.stopPropagation(); filtrerParCategorie(null)">Toutes les catégories</li>
+        <li *ngFor="let cat of categories" (click)="$event.stopPropagation(); filtrerParCategorie(cat)">{{ cat }}</li>
+      </ul>
+    </div>
+    
+    <span class="separator">/</span>
+    
+    <div class="dropdown">
+      <a class="nav-link" (click)="$event.stopPropagation(); toggleMenuFiliere()" [class.active]="filiereSelectionnee">
+        {{ filiereSelectionnee || 'Filiere' }} <span class="arrow">▾</span>
+      </a>
+      <ul class="dropdown-menu" [style.display]="menuFiliereOuvert ? 'block' : 'none'">
+        <li (click)="$event.stopPropagation(); filtrerParFiliere(null)">Toutes les filières</li>
+        <li *ngFor="let fil of filieres" (click)="$event.stopPropagation(); filtrerParFiliere(fil)">{{ fil }}</li>
+        <li *ngIf="filieres.length === 0" style="color: gray; font-style: italic;">Aucune filière disponible</li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="auth-buttons">
+    <ng-container *ngIf="!estConnecte()">
+      <button routerLink="/connexion" class="btn btn-login">Se connecter</button>
+      <button routerLink="/inscription" class="btn btn-register">S'inscrire</button>
+    </ng-container>
+
+    <button *ngIf="estConnecte()" class="profile-avatar-btn" routerLink="/etudiant/mon-compte">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="profile-icon-svg">
+        <path fill-rule="evenodd" d="M18.685 19.097A9.723 9.723 0 0 0 21.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12c0 2.594 1.01 4.954 2.66 6.703a.75.75 0 0 1 .13.843 3.743 3.743 0 0 1-1.42 1.373.75.75 0 0 0 .385 1.393h16.39a.75.75 0 0 0 .385-1.393 3.743 3.743 0 0 1-1.42-1.373.75.75 0 0 1 .13-.843ZM12 5.25a3.75 3.75 0 1 0 0 7.5 3.75 3.75 0 0 0 0-7.5Z" clip-rule="evenodd" />
+      </svg>
+    </button>
+  </div>
+</header>
+
+<main class="main-content">
+  <div *ngIf="livresFiltres.length === 0" class="no-books">
+    Aucun livre ne correspond à vos critères de sélection.
+  </div>
+
+  <div class="books-grid" *ngIf="livresFiltres.length > 0">
+    <div class="book-card" *ngFor="let livre of livresFiltres">
+      <div class="book-cover-wrapper">
+        <img [src]="livre.image" [alt]="livre.titre" *ngIf="livre.image">
+      </div>
+      <button class="btn-details" [routerLink]="['/livre', livre.id]">
+        Voir Details
+      </button>
+    </div>
+  </div>
+</main>

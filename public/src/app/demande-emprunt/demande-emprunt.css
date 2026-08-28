@@ -1,0 +1,225 @@
+/* --- BARRE DE NAVIGATION (reprise de l'accueil) --- */
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 40px;
+  background-color: #ffffff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  font-family: sans-serif;
+  position: relative;
+  z-index: 100;
+}
+
+.logo-area {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.navbar .brand-title {
+  font-size: 26px;
+  font-weight: 700;
+  color: #dfa110; /* Couleur or/jaune distinctive */
+  margin: 0;
+  cursor: pointer;
+}
+
+/* Styles de la barre de recherche */
+.search-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-icon {
+  position: absolute;
+  left: 15px;
+  color: #7a869a;
+}
+
+.search-input {
+  padding: 10px 20px 10px 45px;
+  font-size: 14px;
+  border: 1.5px solid #b3b3b3;
+  border-radius: 25px;
+  outline: none;
+  width: 250px;
+}
+
+/* Liens de navigation */
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: serif; /* Style de police de la maquette */
+}
+
+.nav-link {
+  font-size: 16px;
+  color: #333333;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.nav-link:hover {
+  text-decoration: underline;
+}
+
+.separator {
+  color: #333;
+}
+
+/* --- CONTENEUR PRINCIPAL --- */
+.demande-container {
+  padding: 40px;
+  background-color: #fcfcfc;
+  font-family: sans-serif;
+  position: relative;
+}
+
+/* Bouton de retour ← */
+.back-action {
+  position: absolute;
+  top: 20px;
+  left: 40px;
+}
+
+.btn-back {
+  background: none;
+  border: none;
+  font-size: 28px;
+  color: #333;
+  cursor: pointer;
+}
+
+/* --- LE BLOC ENTIER EN FORME DE CARTE --- */
+.form-wrapper {
+  display: flex;
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  max-width: 950px;
+  width: 100%;
+  margin: 40px auto 0 auto; /* Centré horizontalement */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  overflow: hidden; /* Pour que les arrondis s'appliquent aussi à l'image */
+}
+
+/* --- CÔTÉ GAUCHE : L'IMAGE DU LIVRE AGRANDIE --- */
+.preview-side {
+  flex: 1.2; /* Augmenté pour donner plus d'importance à l'affiche */
+  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.form-book-img {
+  width: 100%;
+  height: 100%;
+  max-height: 580px; /* Aligné sur la hauteur globale de ton formulaire */
+  object-fit: cover; /* Remplit proprement l'espace sans déformer */
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* --- CÔTÉ DROIT : LE FORMULAIRE --- */
+.form-side {
+  flex: 1.3;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px; 
+}
+
+/* Blocs d'étiquette et champ */
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+
+.input-group label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333333;
+  margin-left: 5px;
+}
+
+/* 🎯 FORCE L'ARRONDI PARFAIT SUR TOUS LES CHAMPS (MÊME STRUCTURE QU'INSCRIPTION) */
+.form-side .form-control {
+  width: 100% !important;
+  padding: 14px 18px !important;
+  background-color: #d1daf0 !important; /* Couleur grise-bleue exacte */
+  color: #333 !important;
+  font-size: 14px !important;
+  
+  /* Supprime les bordures carrées natives */
+  border: none !important;
+  border-width: 0 !important;
+  
+  /* Arrondi complet sur les 4 côtés */
+  border-radius: 24px !important; 
+  
+  outline: none !important;
+  box-sizing: border-box !important;
+  appearance: none !important;
+  -webkit-appearance: none !important;
+}
+
+/* Style spécial pour les champs en lecture seule (Titre, Catégorie, etc.) */
+.form-side .readonly-input {
+  background-color: #d1daf0 !important; /* Garde la même couleur de fond */
+  opacity: 0.85;
+  color: #444 !important;
+}
+
+/* 🎯 CONTENEUR POUR CENTRER ET RÉDUIRE LE BOUTON JAUNE */
+.btn-container {
+  width: 100%;
+  display: flex;
+  justify-content: center; /* Centre le bouton horizontalement */
+  margin-top: 15px;
+}
+
+/* 🎯 LE BOUTON EST PLUS PETIT PAR RAPPORT AUX CHAMPS */
+.btn-envoyer {
+  width: auto; /* Ne prend plus 100% de la largeur */
+  min-width: 200px; /* Taille minimale fixe comme sur ta maquette */
+  padding: 12px 30px; /* Marges internes pour un bouton compact */
+  font-size: 15px;
+  font-weight: 600;
+  background-color: #dfa110; /* Ton jaune or */
+  color: white;
+  border: none;
+  border-radius: 12px; /* Coins arrondis du bouton */
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+  text-align: center;
+}
+
+.btn-envoyer:hover {
+  background-color: #c9900e;
+}
+
+.btn-envoyer:active {
+  transform: scale(0.97);
+}
+
+/* --- ALERTE ERREUR DE DOUBLON --- */
+.msg-erreur {
+  background-color: #fde8e8 !important; /* Rouge très clair */
+  color: #e53e3e !important;          /* Texte rouge vif */
+  border: 1px solid #fecaca !important;
+  padding: 14px 20px !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  border-radius: 24px !important;     /* Même arrondi que tes inputs form-control ! */
+  text-align: center;
+  margin-bottom: 10px;
+  width: 100%;
+  box-sizing: border-box;
+}

@@ -1,0 +1,78 @@
+<div class="dashboard-container">
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <h2 class="brand-title">Biblio PY</h2>
+    </div>
+    <nav class="sidebar-menu">
+      <a routerLink="/etudiant/mon-compte" routerLinkActive="active" class="menu-item">Mon compte</a>
+      <a routerLink="/etudiant/suivi-emprunts" routerLinkActive="active" class="menu-item">Suivi des Emprunts</a>
+      <a routerLink="/etudiant/historique" routerLinkActive="active" class="menu-item">Historique des emprunts</a>
+      <a routerLink="/etudiant/mes-livres" routerLinkActive="active" class="menu-item">Mes livres</a>
+      <a routerLink="/etudiant/notifications" routerLinkActive="active" class="menu-item">Notifs</a>
+    </nav>
+  </aside>
+
+  <main class="main-content">
+    <header class="top-header">
+      <div class="user-profile">
+        <span class="user-name">
+          {{ profilEtudiant ? (profilEtudiant.prenom + ' ' + profilEtudiant.nom) : 'Nom de l user' }}
+        </span>
+        <div class="user-avatar">👤</div>
+      </div>
+    </header>
+
+    <section class="content-body">
+      <h1 class="page-title" style="text-align: center; margin-bottom: 20px;">Suivi de mes Emprunts</h1>
+
+      <div class="search-container" style="display: flex; justify-content: center; margin-bottom: 30px;">
+        <div class="search-box" style="position: relative; width: 300px;">
+          <span class="search-icon" style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #666;">🔍</span>
+          <input 
+            type="text" 
+            [(ngModel)]="termeRecherche" 
+            (keyup)="filtrerEmprunts()" 
+            placeholder="Recherche un emprunt"
+            style="width: 100%; padding: 10px 15px 10px 40px; border: 1px solid #ccc; border-radius: 25px; outline: none; font-size: 14px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);"
+          >
+        </div>
+      </div>
+
+      <div class="emprunts-list" style="max-width: 700px; margin: 0 auto;" *ngIf="empruntsFiltres.length > 0">
+        <div class="emprunt-card" *ngFor="let demande of empruntsFiltres" style="display: flex; align-items: center; justify-content: space-between; border: 1px solid #e0e0e0; border-radius: 10px; padding: 20px; margin-bottom: 20px; background: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+          
+          <div class="book-cover-container" style="width: 90px; height: 130px; flex-shrink: 0; margin-right: 25px; overflow: hidden; border-radius: 4px;">
+            <img [src]="demande.livre_details?.image || 'assets/images/default-cover.png'" style="width: 100%; height: 100%; object-fit: cover;" alt="Couverture">
+          </div>
+
+          <div class="emprunt-details" style="flex-grow: 1; font-size: 16px; line-height: 1.8;">
+            <p style="margin: 0;"><strong>Titre :</strong> {{ demande.livre_details?.titre }}</p>
+            <p style="margin: 5px 0;"><strong>Genre :</strong> {{ demande.livre_details?.genre || 'Science Fiction' }}</p>
+            <p style="margin: 0;">
+              <strong>Statut :</strong> 
+              <span style="color: #28a745; font-weight: 500;">{{ demande.statut }}</span>
+            </p>
+          </div>
+
+          <div class="emprunt-actions">
+            <button 
+              *ngIf="demande.statut === 'refuse'"
+              (click)="annulerDemande(demande.id || demande.id_demande || demande.id_emprunt)"
+              style="background-color: #e50914; color: white; border: none; padding: 12px 30px; font-size: 16px; font-weight: bold; border-radius: 25px; cursor: pointer; transition: background 0.2s; box-shadow: 0 4px 6px rgba(229, 9, 20, 0.2);"
+              onmouseover="this.style.backgroundColor='#b80710'"
+              onmouseout="this.style.backgroundColor='#e50914'"
+            >
+              Annuler
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+      <div *ngIf="empruntsFiltres.length === 0" style="text-align: center; margin-top: 30px; color: #777;">
+        Aucune demande d'emprunt trouvée.
+      </div>
+
+    </section>
+  </main>
+</div>
