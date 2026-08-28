@@ -42,7 +42,7 @@ export class AccueilComponent implements OnInit {
   }
 
   chargerLivres() {
-    this.http.get<any[]>('http://localhost:8000/api/livres/').subscribe({
+    this.http.get<any[]>('https://bibliopy-backend.onrender.com/api/livres/').subscribe({
       next: (donnees) => {
         this.tousLesLivres = donnees;
         this.livresFiltres = donnees;

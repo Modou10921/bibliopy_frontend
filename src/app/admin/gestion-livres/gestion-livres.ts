@@ -60,7 +60,7 @@ export class GestionLivresComponent implements OnInit {
 
   chargerLivres() {
   this.loading = true;
-  this.http.get<any[]>('http://localhost:8000/api/livres/').subscribe({
+  this.http.get<any[]>('https://bibliopy-backend.onrender.com/api/livres/').subscribe({
     next: (data) => {
       this.livres = data;
       this.livresFiltres = data;
