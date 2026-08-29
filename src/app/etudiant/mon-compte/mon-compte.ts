@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule, HttpHeaders } from '@angular/common/http';
 
 @Component({
   selector: 'app-mon-compte',
@@ -14,18 +14,55 @@ export class MonCompteComponent implements OnInit {
   profil: any = null;
   estEnChargement: boolean = true;
 
-  constructor(private http: HttpClient, private cdr: ChangeDetectorRef, private router: Router) {}
+  private baseUrl = 'https://bibliopy-backend.onrender.com/api';
+
+  constructor(
+    private http: HttpClient, 
+    private cdr: ChangeDetectorRef, 
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.chargerProfil();
   }
 
+  getHeaders(): HttpHeaders {
+    const token = localStorage.getItem('access_token') || localStorage.getItem('token');
+    if (token) {
+      const authHeader = token.startsWith('Token ') || token.startsWith('Bearer ') ? token : `Token ${token}`;
+      return new HttpHeaders({ Authorization: authHeader });
+    }
+    return new HttpHeaders();
+  }
+
   chargerProfil() {
-    const etudiantId = localStorage.getItem('etudiant_id') || '24';
-    
-    this.http.get<any>(`http://localhost:8000/api/profil/?id=${etudiantId}`).subscribe({
+    // 1. Tente de récupérer les infos depuis le localStorage
+    const userString = localStorage.getItem('user');
+    if (userString) {
+      try {
+        const user = JSON.parse(userString);
+        this.profil = {
+          prenom: user.first_name || user.prenom || '',
+          nom: user.last_name || user.nom || '',
+          email: user.email || '',
+          filiere: user.filiere || '',
+          naissance: user.naissance || ''
+        };
+      } catch (e) {
+        console.error("Erreur parse local user:", e);
+      }
+    }
+
+    // 2. Récupère les données fraîches depuis le backend Render
+    const etudiantId = localStorage.getItem('etudiant_id');
+    const endpoint = etudiantId 
+      ? `${this.baseUrl}/profil/?id=${etudiantId}` 
+      : `${this.baseUrl}/profil/`;
+
+    this.http.get<any>(endpoint, { headers: this.getHeaders() }).subscribe({
       next: (data) => {
-        this.profil = data;
+        // Fusionne les données API avec le profil local
+        this.profil = { ...this.profil, ...data };
         this.estEnChargement = false;
         this.cdr.detectChanges();
       },
@@ -38,9 +75,13 @@ export class MonCompteComponent implements OnInit {
   }
 
   deconnecter() {
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
     localStorage.removeItem('etudiant_id');
     localStorage.removeItem('etudiant_nom');
     localStorage.removeItem('etudiant_prenom');
+    
     this.router.navigate(['/connexion']);
   }
 }
