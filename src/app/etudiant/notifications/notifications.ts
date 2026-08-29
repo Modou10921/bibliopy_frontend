@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { Sidebar } from '../../shared/sidebar/sidebar';
 
@@ -24,40 +24,45 @@ export class Notifications implements OnInit {
   }
 
   chargerNotifications() {
-    // 1. On charge d'abord les notifications stockées localement (notre message de retour de livre)
+    // 1. Charger les notifications stockées en local
     const sauvegarde = localStorage.getItem('notifications_bibliopy');
     let localNotifs = sauvegarde ? JSON.parse(sauvegarde) : [];
 
-    // On transforme le format local pour qu'il ait une propriété .message comme Django
     localNotifs = localNotifs.map((n: any) => ({
       id: n.id || Date.now(),
-      message: n.text, // Aligne 'text' sur 'message' utilisé par ton filtre et ton HTML
+      message: n.text || n.message,
       date_creation: n.date || new Date(),
       lu: n.lu
     }));
 
-    // 2. On charge ensuite les notifications depuis ton API Django
+    // 2. Charger depuis l'API Render
     const etudiantId = localStorage.getItem('etudiant_id');
+    const token = localStorage.getItem('access_token') || localStorage.getItem('token');
+
     if (!etudiantId) {
-      // Si pas d'étudiant connecté, on affiche au moins les notifs locales
       this.notifications = localNotifs;
       this.notificationsFiltrees = [...localNotifs];
       return;
     }
 
-    this.http.get<any[]>(`http://localhost:8000/api/notifications/?etudiant=${etudiantId}`)
+    // Préparation des headers de sécurité si un token existe
+    let headers = new HttpHeaders();
+    if (token) {
+      const authHeader = token.startsWith('Token ') || token.startsWith('Bearer ') ? token : `Token ${token}`;
+      headers = headers.set('Authorization', authHeader);
+    }
+
+    // ✅ URL mise à jour sur Render
+    this.http.get<any[]>(`https://bibliopy-backend.onrender.com/api/notifications/?etudiant=${etudiantId}`, { headers })
       .subscribe({
         next: (data) => {
-          // 3. COMBINAISON : On fusionne les notifs locales ET les notifs de Django !
-          // Les plus récentes (locales) apparaissent en premier
+          // 3. Fusion des notifications
           this.notifications = [...localNotifs, ...data];
           this.notificationsFiltrees = [...this.notifications];
-          
-          this.cdr.detectChanges(); // Force la mise à jour visuelle d'Angular
+          this.cdr.detectChanges();
         },
         error: (err) => {
           console.error('Erreur notifications Django :', err);
-          // Même si Django a une erreur, on affiche quand même les locales
           this.notifications = localNotifs;
           this.notificationsFiltrees = [...localNotifs];
           this.cdr.detectChanges();
