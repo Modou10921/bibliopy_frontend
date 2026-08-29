@@ -17,6 +17,7 @@ export class ProfilEtudiantComponent implements OnInit {
   modeEdition: boolean = false;
   message: string = '';
   erreur: string = '';
+  nbEmpruntsEnCours: number = 0; // 👈 Compteur dynamique d'emprunts
 
   formulaire = {
     nom: '',
@@ -63,12 +64,41 @@ export class ProfilEtudiantComponent implements OnInit {
           this.formulaire.nom = data.nom || data.last_name || '';
           this.formulaire.prenom = data.prenom || data.first_name || '';
           this.formulaire.email = data.email || '';
-          this.chargement = false;
-          this.cdr.detectChanges();
+          
+          // 👈 Récupère et calcule dynamiquement le nombre réel d'emprunts
+          if (id) {
+            this.chargerCompteurEmprunts(id);
+          } else {
+            this.chargement = false;
+            this.cdr.detectChanges();
+          }
         },
         error: (err) => {
           console.error("Erreur chargement profil :", err);
           this.erreur = 'Impossible de charger le profil.';
+          this.chargement = false;
+          this.cdr.detectChanges();
+        }
+      });
+  }
+
+  chargerCompteurEmprunts(etudiantId: string): void {
+    this.http.get<any>(`${this.baseUrl}/demande-emprunt/?etudiant=${etudiantId}`, { headers: this.getHeaders() })
+      .subscribe({
+        next: (data) => {
+          const resultats = Array.isArray(data) ? data : (data.results || []);
+          
+          // Filtre uniquement les emprunts réellement en cours / validés
+          this.nbEmpruntsEnCours = resultats.filter((emprunt: any) => {
+            const st = emprunt.statut?.toLowerCase();
+            return st === 'accepte' || st === 'accepté' || st === 'valide' || st === 'validé' || st === 'prolonge' || st === 'prolongé' || st === 'disponible';
+          }).length;
+
+          this.chargement = false;
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.error("Erreur lors du calcul des emprunts :", err);
           this.chargement = false;
           this.cdr.detectChanges();
         }
