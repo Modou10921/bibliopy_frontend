@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule, HttpHeaders } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -19,6 +19,8 @@ export class RendreLivreComponent implements OnInit {
   commentaire: string = '';
   note: number = 3;
 
+  private baseUrl = 'https://bibliopy-backend.onrender.com/api';
+
   constructor(
     private route: ActivatedRoute,
     private http: HttpClient,
@@ -33,14 +35,23 @@ export class RendreLivreComponent implements OnInit {
     }
   }
 
+  getHeaders(): HttpHeaders {
+    const token = localStorage.getItem('access_token') || localStorage.getItem('token');
+    if (token) {
+      const authHeader = token.startsWith('Token ') || token.startsWith('Bearer ') ? token : `Token ${token}`;
+      return new HttpHeaders({ Authorization: authHeader });
+    }
+    return new HttpHeaders();
+  }
+
   chargerInfosLivre() {
-    this.http.get<any>(`http://localhost:8000/api/demande-emprunt/${this.idDemande}/`).subscribe({
+    this.http.get<any>(`${this.baseUrl}/demande-emprunt/${this.idDemande}/`, { headers: this.getHeaders() }).subscribe({
       next: (data) => {
         this.livreDetails = data;
         this.cdr.detectChanges(); 
       },
       error: (err) => {
-        console.error("Erreur :", err);
+        console.error("Erreur de chargement du livre :", err);
       }
     });
   }
@@ -58,11 +69,11 @@ export class RendreLivreComponent implements OnInit {
       note: this.note
     };
 
-    this.http.patch(`http://localhost:8000/api/demande-emprunt/${this.idDemande}/`, payload).subscribe({
+    this.http.patch(`${this.baseUrl}/demande-emprunt/${this.idDemande}/`, payload, { headers: this.getHeaders() }).subscribe({
       next: () => {
         const messageExact = "Formulaire envoyé. Veuillez vous rendre à la bibliothèque de votre université pour la restitution du livre dans les 5 prochains jours.";
         
-        // ✅ Sauvegarder dans localStorage
+        // Sauvegarder dans localStorage pour l'affichage local dans notifications
         const sauvegarde = localStorage.getItem('notifications_bibliopy');
         const notifs = sauvegarde ? JSON.parse(sauvegarde) : [];
         notifs.unshift({
@@ -83,9 +94,10 @@ export class RendreLivreComponent implements OnInit {
         }).catch(() => {
           this.router.navigate(['/etudiant/notifications']);
         });
-      }, // ✅ virgule ici
+      },
       error: (err) => {
         console.error("Erreur Django :", err);
+        alert("Une erreur est survenue lors de l'envoi de la demande de retour.");
       }
     });
   }
