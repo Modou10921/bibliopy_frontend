@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive, Router } from '@angular/router'; 
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule, HttpHeaders } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -17,6 +17,8 @@ export class MesLivresComponent implements OnInit {
   termeRecherche: string = '';
   profilEtudiant: any = null;
 
+  private baseUrl = 'https://bibliopy-backend.onrender.com/api';
+
   constructor(
     private http: HttpClient, 
     private cdr: ChangeDetectorRef,
@@ -28,15 +30,29 @@ export class MesLivresComponent implements OnInit {
     this.chargerProfilUtilisateur();
   }
 
+  getHeaders(): HttpHeaders {
+    const token = localStorage.getItem('access_token') || localStorage.getItem('token');
+    if (token) {
+      const authHeader = token.startsWith('Token ') || token.startsWith('Bearer ') ? token : `Token ${token}`;
+      return new HttpHeaders({ Authorization: authHeader });
+    }
+    return new HttpHeaders();
+  }
+
   chargerMesLivres() {
-    const etudiantId = localStorage.getItem('etudiant_id') || '24'; 
-    this.http.get<any>(`http://localhost:8000/api/demande-emprunt/?etudiant=${etudiantId}`).subscribe({
+    const etudiantId = localStorage.getItem('etudiant_id');
+    if (!etudiantId) return;
+
+    this.http.get<any>(`${this.baseUrl}/demande-emprunt/?etudiant=${etudiantId}`, { headers: this.getHeaders() }).subscribe({
       next: (data) => {
         const resultats = Array.isArray(data) ? data : (data.results || []);
-        this.listeLivres = resultats.filter((emprunt: any) => 
-          emprunt.statut === 'disponible' || emprunt.statut === 'accepte' || 
-          emprunt.statut === 'Valide' || emprunt.statut === 'prolonge'
-        );
+        
+        // Filtre tous les statuts valides/acceptés/prolongés
+        this.listeLivres = resultats.filter((emprunt: any) => {
+          const st = emprunt.statut?.toLowerCase();
+          return st === 'disponible' || st === 'accepte' || st === 'accepté' || st === 'valide' || st === 'validé' || st === 'prolonge' || st === 'prolongé';
+        });
+
         this.livresFiltres = [...this.listeLivres];
         this.cdr.detectChanges();
       },
@@ -45,13 +61,28 @@ export class MesLivresComponent implements OnInit {
   }
 
   chargerProfilUtilisateur() {
-    const etudiantId = localStorage.getItem('etudiant_id') || '24';
-    this.http.get<any>(`http://localhost:8000/api/profil/?id=${etudiantId}`).subscribe({
-      next: (data) => {
-        this.profilEtudiant = data;
-        this.cdr.detectChanges();
+    const userString = localStorage.getItem('user');
+    if (userString) {
+      try {
+        const user = JSON.parse(userString);
+        this.profilEtudiant = {
+          prenom: user.first_name || user.prenom || '',
+          nom: user.last_name || user.nom || ''
+        };
+      } catch (e) {
+        console.error("Erreur parse user:", e);
       }
-    });
+    } else {
+      const etudiantId = localStorage.getItem('etudiant_id');
+      if (etudiantId) {
+        this.http.get<any>(`${this.baseUrl}/profil/?id=${etudiantId}`, { headers: this.getHeaders() }).subscribe({
+          next: (data) => {
+            this.profilEtudiant = data;
+            this.cdr.detectChanges();
+          }
+        });
+      }
+    }
   }
 
   filtrerLivres() {
@@ -59,7 +90,7 @@ export class MesLivresComponent implements OnInit {
       this.livresFiltres = this.listeLivres;
     } else {
       this.livresFiltres = this.listeLivres.filter(emprunt => {
-        const titre = emprunt.livre_details?.titre?.toLowerCase() || '';
+        const titre = emprunt.livre_details?.titre?.toLowerCase() || emprunt.livre?.titre?.toLowerCase() || '';
         return titre.includes(this.termeRecherche.toLowerCase());
       });
     }
@@ -80,14 +111,13 @@ export class MesLivresComponent implements OnInit {
     }
     
     if (confirm("Voulez-vous prolonger la durée de cet emprunt ?")) {
-      const empruntEnCours = this.listeLivres.find(e => e.id_demande === idDemande);
-      const titreLivre = empruntEnCours?.livre_details?.titre || 'votre livre';
+      const empruntEnCours = this.listeLivres.find(e => (e.id || e.id_demande) === idDemande);
+      const titreLivre = empruntEnCours?.livre_details?.titre || empruntEnCours?.livre?.titre || 'votre livre';
 
-      this.http.patch(`http://localhost:8000/api/demande-emprunt/${idDemande}/`, { statut: 'prolonge' }).subscribe({
+      this.http.patch(`${this.baseUrl}/demande-emprunt/${idDemande}/`, { statut: 'prolonge' }, { headers: this.getHeaders() }).subscribe({
         next: () => {
           const messageExact = `Votre demande de prolongation pour le livre "${titreLivre}" a bien été acceptée par le système.`;
           
-          // ✅ Sauvegarder dans localStorage
           const sauvegarde = localStorage.getItem('notifications_bibliopy');
           const notifs = sauvegarde ? JSON.parse(sauvegarde) : [];
           notifs.unshift({
@@ -108,7 +138,7 @@ export class MesLivresComponent implements OnInit {
           }).catch(() => {
             this.router.navigate(['/etudiant/notifications']);
           });
-        }, // ✅ virgule ici
+        },
         error: (err) => {
           console.error("Erreur Django :", err);
           alert("Erreur ! Le serveur n'a pas pu prolonger l'emprunt.");
