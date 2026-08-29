@@ -21,8 +21,11 @@ export class DetailLivreComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    const idLivre = this.route.snapshot.paramMap.get('id');
-    if (idLivre) {
+    const paramId = this.route.snapshot.paramMap.get('id');
+    if (paramId) {
+      // Supprime le symbole ':' et conserve uniquement les chiffres/identifiants propres
+      const idLivre = paramId.replace(':', '').trim();
+
       this.http.get<any>(`https://bibliopy-backend.onrender.com/api/livres/${idLivre}/`).subscribe({
         next: (donnees) => {
           this.livre = donnees;
@@ -38,7 +41,6 @@ export class DetailLivreComponent implements OnInit {
 
     if (token) {
       console.log("✅ Étudiant connecté. Redirection vers la route 'reserver'...");
-      // ✨ Corrigé : on utilise le chemin exact défini dans ton fichier de routage
       this.router.navigate(['/reserver', this.livre.id]);
     } else {
       console.warn("❌ Aucun token trouvé. Redirection vers la connexion.");
