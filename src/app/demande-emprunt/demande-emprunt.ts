@@ -105,7 +105,7 @@ export class DemandeEmpruntComponent implements OnInit {
     // On réinitialise l'erreur avant l'envoi
     this.erreurEnvoi = '';
 
-    this.http.post('https://bibliopy-backend.onrender.com/api/demande-emprunts/', donneesEmprunt, { headers }).subscribe({
+    this.http.post('https://bibliopy-backend.onrender.com/api/demande-emprunt/', donneesEmprunt, { headers }).subscribe({
       next: (reponseBackend: any) => {
         if (reponseBackend && reponseBackend.message) {
           const evenement = new CustomEvent('nouvelle-notification', { detail: reponseBackend.message });
