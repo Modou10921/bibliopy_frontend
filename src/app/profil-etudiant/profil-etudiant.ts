@@ -1,13 +1,13 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpClientModule, HttpHeaders } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router'; // 👈 1. Importation du Router Angular
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-profil-etudiant',
   standalone: true,
-  imports: [CommonModule, FormsModule], // Pas besoin de charger RouterLink ici puisqu'on utilise un (click)
+  imports: [CommonModule, FormsModule, HttpClientModule],
   templateUrl: './profil-etudiant.html',
   styleUrls: ['./profil-etudiant.css']
 })
@@ -25,7 +25,8 @@ export class ProfilEtudiantComponent implements OnInit {
     nouveau_mot_de_passe: ''
   };
 
-  // 👈 2. Injection du service "router" dans le constructeur
+  private baseUrl = 'https://bibliopy-backend.onrender.com/api';
+
   constructor(
     private http: HttpClient, 
     private cdr: ChangeDetectorRef,
@@ -36,24 +37,37 @@ export class ProfilEtudiantComponent implements OnInit {
     this.chargerProfil();
   }
 
-  // 👈 3. Fonction déclenchée par le clic sur ta flèche HTML
+  getHeaders(): HttpHeaders {
+    const token = localStorage.getItem('access_token') || localStorage.getItem('token');
+    if (token) {
+      const authHeader = token.startsWith('Token ') || token.startsWith('Bearer ') ? token : `Token ${token}`;
+      return new HttpHeaders({ Authorization: authHeader });
+    }
+    return new HttpHeaders();
+  }
+
   allerAAccueil(): void {
     this.router.navigate(['/']);
   }
 
   chargerProfil(): void {
-    const id = localStorage.getItem('etudiant_id') || '19';
-    this.http.get<any>(`http://localhost:8000/api/profil/?id=${id}`)
+    const id = localStorage.getItem('etudiant_id');
+    const endpoint = id 
+      ? `${this.baseUrl}/profil/?id=${id}` 
+      : `${this.baseUrl}/profil/`;
+
+    this.http.get<any>(endpoint, { headers: this.getHeaders() })
       .subscribe({
         next: (data) => {
           this.profil = data;
-          this.formulaire.nom = data.nom;
-          this.formulaire.prenom = data.prenom;
-          this.formulaire.email = data.email;
+          this.formulaire.nom = data.nom || data.last_name || '';
+          this.formulaire.prenom = data.prenom || data.first_name || '';
+          this.formulaire.email = data.email || '';
           this.chargement = false;
           this.cdr.detectChanges();
         },
         error: (err) => {
+          console.error("Erreur chargement profil :", err);
           this.erreur = 'Impossible de charger le profil.';
           this.chargement = false;
           this.cdr.detectChanges();
@@ -62,8 +76,12 @@ export class ProfilEtudiantComponent implements OnInit {
   }
 
   sauvegarder(): void {
-    const id = localStorage.getItem('etudiant_id') || '19';
-    this.http.put<any>(`http://localhost:8000/api/profil/modifier/?id=${id}`, this.formulaire)
+    const id = localStorage.getItem('etudiant_id');
+    const endpoint = id 
+      ? `${this.baseUrl}/profil/modifier/?id=${id}` 
+      : `${this.baseUrl}/profil/modifier/`;
+
+    this.http.put<any>(endpoint, this.formulaire, { headers: this.getHeaders() })
       .subscribe({
         next: () => {
           this.message = '✅ Profil mis à jour avec succès !';
@@ -73,6 +91,7 @@ export class ProfilEtudiantComponent implements OnInit {
           this.cdr.detectChanges();
         },
         error: (err) => {
+          console.error("Erreur modification profil :", err);
           this.erreur = '❌ Erreur lors de la mise à jour.';
           this.message = '';
           this.cdr.detectChanges();
